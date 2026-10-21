@@ -1,18 +1,87 @@
 #include <iostream>
+using namespace std;
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+static string get_from_store(const string& key, unordered_map<string, string> &store) {
+  if (!store.contains(key)) {
+    return "Not found!";
+  }
+  return store.at(key);
+}
+
+static void add_to_store(const string& key, const string& value,
+                         unordered_map<string, string> &store) {
+  if (!store.contains(key)) {
+    store.insert({key, value});
+    return;
+  }
+  cout << "Key already exists with value - " <<
+    get_from_store(key, store) << endl;
+}
+
+static void update_to_store(const string& key, const string& value,
+  unordered_map<string, string> &store) {
+  if (!store.contains(key)) {
+    cout << "Key does not exists in the DB. Insert first. " << endl;
+    return;
+  }
+  store.at(key) = value;
+}
+
+static void remove_from_store(const string& key, unordered_map<string, string> &store) {
+  if (!store.contains(key)) {
+    cout << "Key not found in the DB." << endl;
+    return;
+  }
+  store.erase(key);
+}
 
 int main() {
-  // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
+  cout << "Hello world!" << endl;
 
-  const auto lang = "C++";
-  std::cout << "Hello and welcome to " << lang << "!\n";
+  unordered_map<string, string> store;
+  string key, value;
+  int operation;
+  while (true){
+    cout<<"Choose the method: 1.GET \n2. CREATE \n3. UPDATE\n4. DELETE\n"<< endl;
+    cin >> operation;
+    cout << "you have entered " << operation << endl;
+    cout << endl;
+    switch (operation) {
+      case 1:
+        cout << "*******GET OPERATION*******" << endl;
+        cout << "Enter the key : ";
+        cin >> key;
+        cout<< get_from_store(key, store) << endl;
+        break;
+      case 2:
+        cout << "*******CREATE OPERATION*******" << endl;
+        cout << "Enter the Key : ";
+        cin >> key;
+        cout << "Enter the value : ";
+        cin >> value;
+        add_to_store(key, value, store);
+        break;
+      case 3:
+        cout << "*******UPDATE OPERATION*******" << endl;
+        cout << "Enter the Key : ";
+        cin >> key;
+        cout << "Enter the value : ";
+        cin >> value;
+        update_to_store(key, value, store);
+        break;
+      case 4:
+        cout << "*******DELETE OPERATION*******" << endl;
+        cout << "Enter the Key : ";
+        cin >> key;
+        remove_from_store(key, store);
+        break;
 
-  for (int i = 1; i <= 5; i++) {
-    // TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-    std::cout << "i = " << i << std::endl;
+      default:
+        cout << "Please choose a valid operation." << endl;
+        break;
+    }
   }
 
+
   return 0;
-  // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
