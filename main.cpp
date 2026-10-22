@@ -1,5 +1,8 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <unordered_map>
+
 using namespace std;
 
 static string get_store(const string& key, unordered_map<string, string> &store) {
@@ -39,8 +42,9 @@ int main() {
     cout << "redis-cli> ";
     getline(cin, query);
     stringstream queryStream(query);
-    while (getline(queryStream, query,' ')) {
-      queryArgs.push_back(query);
+    string queryArg;
+    while (queryStream >> queryArg) {
+      queryArgs.push_back(queryArg);
     }
 
     if (queryArgs.size()>3) {
@@ -56,23 +60,25 @@ int main() {
       cout << "invalid query" << endl;
     }
      else if (queryArgs[0] == "GET") {
-      if (queryArgs.size() < 2) {
+      if (queryArgs.size() < 2 || queryArgs.size() >2) {
         cout << "Invalid query" << endl;
         continue;
       }
       cout << get_store(queryArgs[1], store) << endl;
     }else if (queryArgs[0] == "SET") {
-      if (queryArgs.size() < 3) {
+      if (queryArgs.size() < 3 || queryArgs.size() > 3) {
         cout << "Invalid query" << endl;
         continue;
       }
       set_store(queryArgs[1], queryArgs[2], store);
     }else if (queryArgs[0] == "DEL") {
-      if (queryArgs.size() < 2) {
+      if (queryArgs.size() < 2 || queryArgs.size() >2) {
         cout << "Invalid query" << endl;
         continue;
       }
       del_store(queryArgs[1], store);
+    } else {
+      cout << "Invalid query" << endl;
     }
   }
 
