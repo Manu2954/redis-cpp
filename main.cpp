@@ -4,7 +4,7 @@ using namespace std;
 
 static string get_store(const string& key, unordered_map<string, string> &store) {
   if (!store.contains(key)) {
-    return "NA";
+    return "(nil)";
   }
   return store.at(key);
 }
@@ -22,10 +22,11 @@ static void set_store(const string& key, const string& value,
 
 static void del_store(const string& key, unordered_map<string, string> &store) {
   if (!store.contains(key)) {
+    cout<<"0"<<endl;
     return;
   }
   store.erase(key);
-  cout << "OK" << endl;
+  cout << "1" << endl;
 }
 
 int main() {
@@ -47,27 +48,32 @@ int main() {
       continue;
     }
 
-    if (queryArgs.size()>2 && queryArgs[0][0] != 'S') {
-      cout << "Invalid query" << endl;
-      continue;
+     if (queryArgs.size()<2 && !queryArgs.empty()) {
+      if (queryArgs[0] == "exit" || queryArgs[0] == "EXIT") {
+        cout << "OK" << endl;
+        exit(0);
+      }
+      cout << "invalid query" << endl;
     }
-
-    if (queryArgs.size() == 1 &&
-      (queryArgs[0] == "exit" || queryArgs[0] == "EXIT")) {
-      exit(0);
+     else if (queryArgs[0] == "GET") {
+      if (queryArgs.size() < 2) {
+        cout << "Invalid query" << endl;
+        continue;
+      }
+      cout << get_store(queryArgs[1], store) << endl;
+    }else if (queryArgs[0] == "SET") {
+      if (queryArgs.size() < 3) {
+        cout << "Invalid query" << endl;
+        continue;
+      }
+      set_store(queryArgs[1], queryArgs[2], store);
+    }else if (queryArgs[0] == "DEL") {
+      if (queryArgs.size() < 2) {
+        cout << "Invalid query" << endl;
+        continue;
+      }
+      del_store(queryArgs[1], store);
     }
-
-    switch (queryArgs[0][0]) {
-      case 'S': set_store(queryArgs[1], queryArgs[2], store);
-        break;
-      case 'D': del_store(queryArgs[1], store);
-        break;
-       case 'G': cout<< get_store(queryArgs[1], store) << endl;
-        break;
-      default: cout << "Invalid query" << endl;
-        break;
-    }
-
   }
 
 
