@@ -41,10 +41,17 @@ int main() {
     vector<string> queryArgs;
     cout << "redis-cli> ";
     getline(cin, query);
+    if (!getline(cin, query)) {
+      break;
+    }
     stringstream queryStream(query);
     string queryArg;
     while (queryStream >> queryArg) {
       queryArgs.push_back(queryArg);
+    }
+
+    if (queryArgs.empty()) {
+      continue;
     }
 
     if (queryArgs.size()>3) {
